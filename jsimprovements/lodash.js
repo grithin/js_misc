@@ -147,14 +147,16 @@ _.ucwords = function(string){
 _.capitalize = function(string){
 	return string.charAt(0).toUpperCase() + string.slice(1);	}
 
-_.precision = function(string, precision){
+_.decimals = function(string, precision){
 	string = _.round(string, precision)+''
 	var parts = string.split('.')
 	if(parts.length === 2){
 		var remaining = presision - parts[1].length
 		return string+'0'.repeat(remaining)
-	}else{
+	}else if(precision > 0){
 		return string + '.' + '0'.repeat(precision)
+	}else{
+		return string
 	}
 }
 ///htmlspecialchars() - for escaping text
