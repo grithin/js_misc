@@ -1,4 +1,4 @@
-if(Meteor.isClient){
+if(!this.Meteor || Meteor.isClient){
 
 
 ///get the data from a single form as an arbitrarily deep object
@@ -18,7 +18,7 @@ $.fn.asObjectdata = function(){
 }
 
 
-// turn form into flat an object of keyed values like:
+// turn form into flat object of keyed values like:
 // {"start[bob]":"",  "start[sue]":"",  "end":"", ...}
 
 // http://stackoverflow.com/users/66617/tobias-cohen
@@ -101,20 +101,19 @@ $.fn.setEnterSubmit = function(){
 
 
 ///fill the inputs in a form with the keyed data provided
-$.fn.fillInputs = function(obj, options){
-	options = options || {}
-	$('[name]:not([type="submit"])',form).each(function(){
-		var value = values[$(this).attr('name')]
-		if(value || !options.ignoreFalse){
-			bf.view.form.fillInput($(this),value)	}	})
+$.fn.fillInputs = function(values){
+	$('[name]:not([type="submit"])', $(this)).each(function(){
+		var name = $(this).attr('name')
+		if(values.hasOwnProperty(name)){
+			$(this).fillInput(values[name])	}	})
 }
 
 $.fn.fillInput = function(value){
-	if(input.attr('type')=='checkbox'){
+	if($(this).attr('type')=='checkbox'){
 		if(value && value != '0'){
-			input.prop('checked',true)	}
+			$(this).prop('checked',true)	}
 	}else{
-		input.val(value || '')
+		$(this).val(value || '')
 	}
 }
 
