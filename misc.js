@@ -30,3 +30,18 @@ grithin.hash = grithin.hashFnv32a = function(str, seed) {
 
 }
 
+grithin.dom = {}
+
+sort_on_second = function(v){ return v[1] }
+// turn an object into array compatible with $.fn.fillOptions
+grithin.dom.sorted_options = function(obj){
+	return _.sortBy(_.dekey(obj), sort_on_second)
+}
+// turn an object into sorted array compatible with $.fn.fillOptions
+grithin.dom.sorted_capped_options = function(obj){
+	return _.sortBy(_.dekey(_.morph(obj, _.ucwords)), sort_on_second)
+}
+// turn an object into array compatible with $.fn.fillOptions
+grithin.dom.capped_options = function(obj){
+	return _.dekey(_.morph(obj, _.ucwords))
+}

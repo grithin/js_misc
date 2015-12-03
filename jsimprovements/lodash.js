@@ -170,55 +170,56 @@ _.nl2br = function(string){
 
 // http://stackoverflow.com/questions/19098797/fastest-way-to-flatten-un-flatten-nested-json-objects
 _.kUnflatten = function(data) {
-    "use strict";
-    if (Object(data) !== data || Array.isArray(data))
-        return data;
-    var regex = /\.?([^.\[\]]+)|\[(\d+)\]/g,
-        resultholder = {};
-    for (var p in data) {
-        var cur = resultholder,
-            prop = "",
-            m;
-        while (m = regex.exec(p)) {
-            cur = cur[prop] || (cur[prop] = (m[2] ? [] : {}));
-            prop = m[2] || m[1];
-        }
-        cur[prop] = data[p];
-    }
-    return resultholder[""] || resultholder;
+		"use strict";
+		if (Object(data) !== data || Array.isArray(data))
+			return data;
+		var regex = /\.?([^.\[\]]+)|\[(\d+)\]/g,
+			resultholder = {};
+		for (var p in data) {
+			var cur = resultholder,
+				prop = "",
+				m;
+			while (m = regex.exec(p)) {
+				cur = cur[prop] || (cur[prop] = (m[2] ? [] : {}));
+				prop = m[2] || m[1];
+			}
+			cur[prop] = data[p];
+		}
+		return resultholder[""] || resultholder;
 };
 // flatten keys of object with . separation
-_.kFlatten = function(data) {
-    var result = {};
-    function recurse (cur, prop) {
-        if (Object(cur) !== cur) {
-            result[prop] = cur;
-        } else if (Array.isArray(cur)) {
-             for(var i=0, l=cur.length; i<l; i++)
-                 recurse(cur[i], prop + "[" + i + "]");
-            if (l == 0)
-                result[prop] = [];
-        } else {
-            var isEmpty = true;
-            for (var p in cur) {
-                isEmpty = false;
-                recurse(cur[p], prop ? prop+"."+p : p);
-            }
-            if (isEmpty && prop)
-                result[prop] = {};
-        }
-    }
-    recurse(data, "");
-    return result;
+_.flatten_keys = function(data) {
+	var result = {};
+	function recurse (cur, prop) {
+		if (Object(cur) !== cur || Array.isArray(cur)) {
+			result[prop] = cur;
+		}else{
+			var isEmpty = true;
+			for (var p in cur) {
+				isEmpty = false;
+				recurse(cur[p], prop ? prop+"."+p : p);
+			}
+			if (isEmpty && prop){
+				result[prop] = {}	}	}	}
+
+	recurse(data, "");
+	return result;
 }
 
 
 /// turn a js object into flat {} of conventional input names
-_.kBracketFlatten = function(data){
-	var flat = _.kFlatten(data)
+_.flatten_keys_input = _.kBracketFlatten = function(data){
+	var flat = _.flatten_keys(data)
 	var bracketFlat = {}
+	var name;
+	// remove the "." separation
 	for(var k in flat){
-		parts = k.split('.')
+		name = k
+		// add "[]" to array values
+		if(Array.isArray(flat[k])){
+			name += '[]'
+		}
+		parts = name.split('.')
 		if(parts.length > 1){
 			//first key is not bracketted: ex: bob[bill]
 			first = parts.shift()
@@ -226,8 +227,26 @@ _.kBracketFlatten = function(data){
 			newKey = first+parts.join('')
 			bracketFlat[newKey] = flat[k]
 		}else{
-			bracketFlat[k] = flat[k]
+			bracketFlat[name] = flat[k]
 		}
 	}
+
 	return bracketFlat
+}
+
+// take an object and turn it into an array of arrays like [[<key>,<value>], ...]
+_.dekey = function(data){
+	var pairs = []
+	for(var key in data){
+		pairs.push([key, data[key]])
+	}
+	return pairs
+}
+
+// like map, but maintains and returns obj instead of array
+_.morph = function(obj, fn){
+	for(var key in obj){
+		obj[key] = fn(obj[key])
+	}
+	return obj
 }

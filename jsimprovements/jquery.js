@@ -123,4 +123,10 @@ $.fn.clearForm = function(){
 	$('input[type="checkbox"], input[type="radio"]', $(this)).prop('checked',false)
 }
 
+$.fn.fillOptions = function(options){
+	for(var key in options){
+		$(this).append($('<option>').val(options[key][0]).text(options[key][1]))
+	}
+}
+
 }
