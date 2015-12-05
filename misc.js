@@ -45,3 +45,17 @@ grithin.dom.sorted_capped_options = function(obj){
 grithin.dom.capped_options = function(obj){
 	return _.dekey(_.morph(obj, _.ucwords))
 }
+grithin.tags = {}
+grithin.tags.to_array = function(str){
+	return  _.unique(str.split(',').map(grithin.tags.conform))
+}
+/**
+considerations
+-	data storage does not necessarily provide query allowance for case sensitivity
+-	spaces are important.  A tag is a concept, not a word, and a concept may require spaces
+-	periods are important.  Without case sensitivity, they provide the indicator of acronym
+-	special characters like "'" and "_" are too infrequent for inclusion
+*/
+grithin.tags.conform = function(str){
+	return _.trim(str.replace(/[^a-z0-9. ]/ig,''))
+}

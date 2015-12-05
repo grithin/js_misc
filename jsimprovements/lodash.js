@@ -1,3 +1,8 @@
+// override potential underscore
+if(this.lodash){
+	_ = lodash
+}
+
 ///filter a value out of an array
 /**
 @param	absoluteMatch <whether to use != or !== >

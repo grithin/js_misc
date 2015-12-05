@@ -34,6 +34,7 @@ String.prototype.repeat = function(num){
 }
 
 ///escape special characters from a string for regex
+/// ex: new RegExp('' + RegExp.quote(input) + '');
 RegExp.quote = function(str) {
 	return (str+'').replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
 }

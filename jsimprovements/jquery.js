@@ -1,4 +1,4 @@
-if(!this.Meteor || Meteor.isClient){
+if(this.$){
 
 
 ///get the data from a single form as an arbitrarily deep object
