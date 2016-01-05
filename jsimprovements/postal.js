@@ -1,7 +1,7 @@
 if(this.postal){
 
 	///amusing myself as a standard
-	news = postal
+	this.news = postal
 
 	///postal does not provide a useful 'this' within the callback, so provide one
 	/**
@@ -12,7 +12,7 @@ if(this.postal){
 		manager.subscription = news.subscribe({topic:topic,callback:callback.bind(manager)})
 		return manager.subscription	}
 	///get one published item, then opt out
-	news.optout = function(topic,callback){
+	news.sub_once = function(topic,callback){
 		var wrapper = function(data){
 			callback(data)
 			this.subscription.unsubscribe()	}
@@ -26,6 +26,6 @@ if(this.postal){
 		var promise = Promise.later()
 		news.optout(topic,promise.resolve)
 		return promise	}
-	
-
+}else{
+	console.log('no postal')
 }

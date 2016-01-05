@@ -9,7 +9,7 @@ Function.prototype.arg = function() {
 		partial = function() {
 			return fn.apply(this, args.concat(slice.call(arguments)));
 		};
-	partial.prototype = Object.create(this.prototype);
+	partial.prototype = Object.create(Object.getPrototypeOf(this));
 	return partial;
 }
 ///return an object where "this" is the prototype and available in property "parent"
