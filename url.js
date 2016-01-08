@@ -1,10 +1,10 @@
-Url = {}
+this.Url = {}
 //get query string request variable
 Url.var = function(name,decode){
 	decode = decode != null ? decode : true;
 	url = window.location+'';
 	if(/\?/.test(url)){
-		var uriParts = Url.split('?');
+		var uriParts = url.split('?');
 		regexName = name.replace(/(\[|\])/g,"\\$1");
 		var regex = new RegExp('(^|&)'+regexName+'=(.*?)(&|$)','g');
 		var match = regex.exec(uriParts[1]);
@@ -20,10 +20,10 @@ Url.var = function(name,decode){
 
 ///take a url and break it up in to page/path and key value pairs
 Url.parts = function(options){
-	options = _.extend({url:window.location+'',decode:true},options)
+	options = _.defaults(options || {}, {url:window.location+'',decode:true})
 
 	var retPairs = []
-	var urlParts = options.Url.split('?');
+	var urlParts = options.url.split('?');
 	if(urlParts[1]){
 		var pairs = urlParts[1].split('&');
 		if(pairs.length > 0){
@@ -65,7 +65,7 @@ Url.fromParts = function(parts,encode){
 will remove exactly one matched token if regex is a string
 */
 Url.queryFilter = function(regex,options){
-	options = _.extend({url:window.location+'',decode:true},options)
+	options = _.defaults(options || {}, {url:window.location+'',decode:true})
 
 	var parts = Url.parts(options)
 
@@ -126,7 +126,7 @@ Url.primaryId = function(url){
 	url = url || (window.location + '')
 	var id = Url.var('id')
 	if(!id){
-		id = Url.split('?')[0].split('/').pop()
+		id = url.split('?')[0].split('/').pop()
 	}
 	return id;
 }
